@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package services;
+option go_package = "./services";
+
+service calc {
+    rpc Plus(plusRequest) returns(plusResponse);
+    rpc Minus(minusRequest) returns(minusResponse);
+}
+
+message plusRequest {
+    uint32 n = 1;
+}
+
+message plusResponse {
+    int64 result = 1;
+}
+
+message minusRequest {
+    sint32 n = 1;
+}
+
+message minusResponse {
+    int64 result = 1;
+}

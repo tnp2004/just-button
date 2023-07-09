@@ -1,0 +1,1 @@
+protoc *.proto --go_out=../grpcserver --go-grpc_out=../grpcserver && protoc *.proto --go_out=../clientserver --go-grpc_out=../clientserver

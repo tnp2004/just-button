@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "./clientserver"
+		},
+		{
+			"path": "./grpcserver"
+		},
+		{
+			"path": "./proto"
+		},
+	],
+	"settings": {}
+}
