@@ -2,12 +2,11 @@ package services
 
 import (
 	"context"
-	"fmt"
 )
 
 type CalcService interface {
-	Plus(n uint32) error
-	Minus(n int32) error
+	Plus(n uint64, out *int) error
+	Minus(n int64, out *int) error
 }
 
 type calcService struct {
@@ -18,7 +17,7 @@ func NewCalcService(calcClient CalcClient) CalcService {
 	return calcService{calcClient}
 }
 
-func (serv calcService) Plus(n uint32) error {
+func (serv calcService) Plus(n uint64, out *int) error {
 	req := PlusRequest{
 		N: n,
 	}
@@ -28,12 +27,12 @@ func (serv calcService) Plus(n uint32) error {
 		return err
 	}
 
-	fmt.Println(res)
+	*out = int(res.Result)
 
 	return nil
 }
 
-func (serv calcService) Minus(n int32) error {
+func (serv calcService) Minus(n int64, out *int) error {
 	req := MinusRequest{
 		N: n,
 	}
@@ -43,7 +42,7 @@ func (serv calcService) Minus(n int32) error {
 		return err
 	}
 
-	fmt.Println(res)
+	*out = int(res.Result)
 
 	return nil
 }
