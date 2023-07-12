@@ -11,7 +11,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type Data struct {
+type RequestData struct {
+	N int64 `json:"n"`
+}
+
+type ResponseResult struct {
 	N int64 `json:"n"`
 }
 
@@ -29,7 +33,7 @@ func main() {
 
 	app.Patch("/update", func(c *fiber.Ctx) error {
 
-		var data Data
+		var data RequestData
 		err := c.BodyParser(&data)
 		if err != nil {
 			return c.SendString("Something went wrong!")
@@ -46,7 +50,9 @@ func main() {
 			fmt.Println(err)
 		}
 
-		return c.JSON(result)
+		return c.JSON(ResponseResult{
+			N: int64(result),
+		})
 	})
 
 	app.Listen(":3000")
