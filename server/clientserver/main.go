@@ -7,6 +7,7 @@ import (
 	"math"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -30,7 +31,7 @@ func main() {
 	calcService := services.NewCalcService(calcClient)
 
 	app := fiber.New()
-
+	app.Use(cors.New())
 	app.Patch("/update", func(c *fiber.Ctx) error {
 
 		var data RequestData
