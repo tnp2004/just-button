@@ -1,17 +1,20 @@
 <script lang="ts">
-	const endpoint = 'http://localhost:3000/update';
+	import { onMount } from "svelte";
+
+	const updateEndpoint = 'http://localhost:3000/update';
+	const sumEndpoint = 'http://localhost:3000/sum';
 	let sum: number = 0;
 
 	let value: number = 0;
 
 	const updateValue = async (v: number) => {
-		const res = await fetch(endpoint, {
+		const res = await fetch(updateEndpoint, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-                n: value
+                n: v
             })
 		});
 
@@ -21,12 +24,20 @@
 	};
 
 	const getSummation = async () => {
-		const res = await fetch("http://localhost:3000/sum")
+		const res = await fetch(sumEndpoint)
 		const data = await res.json()
 		sum = data.n
 	}
 
-    setInterval(async () => await getSummation(), 5000)
+	onMount(() => {
+		getSummation()
+		const interv = setInterval(async () => await getSummation(), 5000)
+		
+		return () => {
+			clearInterval(interv)
+		}
+	})
+
 
 </script>
 
