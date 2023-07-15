@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Calc_Plus_FullMethodName  = "/services.calc/Plus"
-	Calc_Minus_FullMethodName = "/services.calc/Minus"
+	Calc_Plus_FullMethodName         = "/services.calc/Plus"
+	Calc_Minus_FullMethodName        = "/services.calc/Minus"
+	Calc_GetSummation_FullMethodName = "/services.calc/GetSummation"
 )
 
 // CalcClient is the client API for Calc service.
@@ -29,6 +30,7 @@ const (
 type CalcClient interface {
 	Plus(ctx context.Context, in *PlusRequest, opts ...grpc.CallOption) (*PlusResponse, error)
 	Minus(ctx context.Context, in *MinusRequest, opts ...grpc.CallOption) (*MinusResponse, error)
+	GetSummation(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
 }
 
 type calcClient struct {
@@ -57,12 +59,22 @@ func (c *calcClient) Minus(ctx context.Context, in *MinusRequest, opts ...grpc.C
 	return out, nil
 }
 
+func (c *calcClient) GetSummation(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error) {
+	out := new(SumResponse)
+	err := c.cc.Invoke(ctx, Calc_GetSummation_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CalcServer is the server API for Calc service.
 // All implementations must embed UnimplementedCalcServer
 // for forward compatibility
 type CalcServer interface {
 	Plus(context.Context, *PlusRequest) (*PlusResponse, error)
 	Minus(context.Context, *MinusRequest) (*MinusResponse, error)
+	GetSummation(context.Context, *SumRequest) (*SumResponse, error)
 	mustEmbedUnimplementedCalcServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedCalcServer) Plus(context.Context, *PlusRequest) (*PlusRespons
 }
 func (UnimplementedCalcServer) Minus(context.Context, *MinusRequest) (*MinusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Minus not implemented")
+}
+func (UnimplementedCalcServer) GetSummation(context.Context, *SumRequest) (*SumResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSummation not implemented")
 }
 func (UnimplementedCalcServer) mustEmbedUnimplementedCalcServer() {}
 
@@ -125,6 +140,24 @@ func _Calc_Minus_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Calc_GetSummation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SumRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CalcServer).GetSummation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Calc_GetSummation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CalcServer).GetSummation(ctx, req.(*SumRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Calc_ServiceDesc is the grpc.ServiceDesc for Calc service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var Calc_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Minus",
 			Handler:    _Calc_Minus_Handler,
+		},
+		{
+			MethodName: "GetSummation",
+			Handler:    _Calc_GetSummation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,6 +1,8 @@
 package services
 
-import context "context"
+import (
+	context "context"
+)
 
 type calcServer struct{}
 
@@ -28,6 +30,14 @@ func (calcServer) Minus(ctx context.Context, req *MinusRequest) (*MinusResponse,
 	count -= int64(req.N)
 
 	res := MinusResponse{
+		Result: count,
+	}
+
+	return &res, nil
+}
+
+func (calcServer) GetSummation(ctx context.Context, req *SumRequest) (*SumResponse, error) {
+	res := SumResponse{
 		Result: count,
 	}
 

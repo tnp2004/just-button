@@ -32,6 +32,19 @@ func main() {
 
 	app := fiber.New()
 	app.Use(cors.New())
+
+	app.Get("/sum", func(c *fiber.Ctx) error {
+		var result int
+
+		err := calcService.GetSummation(&result)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		return c.JSON(ResponseResult{
+			N: int64(result),
+		})
+	})
 	app.Patch("/update", func(c *fiber.Ctx) error {
 
 		var data RequestData

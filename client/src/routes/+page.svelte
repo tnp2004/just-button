@@ -16,10 +16,18 @@
 		});
 
         const data = await res.json()
-        console.log(data)
         sum = data.n
         value = 0
 	};
+
+	const getSummation = async () => {
+		const res = await fetch("http://localhost:3000/sum")
+		const data = await res.json()
+		sum = data.n
+	}
+
+    setInterval(async () => await getSummation(), 5000)
+
 </script>
 
 <div class="h-screen flex">
